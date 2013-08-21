@@ -5,15 +5,14 @@ import re
 import sys
 import logging
 import urllib
-import urllib2
 import mechanize
 import urlparse
 
+import Stadsdeel
 from bs4 import BeautifulSoup
 import time
-from UnicodeDictWriter import UnicodeDictWriter
 
-MAIN_URL = 'http://www.funda.nl/koop/amsterdam'
+MAIN_URL = 'http://www.funda.nl/koop/amsterdam/jordaan'
 test_dir = "/Users/marknuttallsmith/Projects/FundaScraper/data/"
 
 # To make sure you're seeing all debug output:
@@ -49,17 +48,28 @@ def parse_html(html):
     nav = soup.find_all("p", class_="path-nav")[0]
     specs["Area"] = nav.get_text(strip=True).split(">")[-1]
 
+    specs["Stadsdeel"] = Stadsdeel.stadsdeel[specs["Area"]]
     for table in soup.find_all("table", class_="specs-cats"):
         for tr in table.find_all('tr'):
             if tr.th is not None and tr.td is not None and tr.td.get_text(strip=True):
-                text = tr.td.get_text("|", strip=True)
-                text = text.replace(u"\u00B2", u'')
-                text = text.replace(u"\u00B3", u'')
-                text = text.replace(u"\u20AC",u'').strip()
-                text = re.sub("\W+m$", "", text)
-                text = re.sub("(\d+)\.(\d+) k\.k\.", r"\1\2", text)
-
                 key = tr.th.get_text(strip=True)
+
+                text = tr.td.get_text("|", strip=True)
+
+                text = text.replace(u"\u00B2", u'')  # replace squares
+                text = text.replace(u"\u00B3", u'')  # replace cubes
+                text = re.sub("\W+m$", "", text)  # replace metres
+                text = text.replace(u"\u20AC", u'').strip()  # replace euros
+
+                if key == 'Vraagprijs':
+                    if "v.o.n." in text:
+                        text = text.replace(" v.o.n.", "")
+                        specs["Cost"] = "v.o.n."
+                    elif "k.k." in text:
+                        text = text.replace(" k.k.", "")
+                        specs["Cost"] = "k.k."
+                    text = text.replace(".", "")
+
                 specs[key] = text
     return specs
 
@@ -111,7 +121,7 @@ def main():
         html = get_html(link)
         if html is not None:
             specs = parse_html(html)
-            specs["Link"] = link
+            specs["Link"] = '=HYPERLINK("' + link + '")'
             all_specs.append(specs)
 
     keys = get_all_keys(all_specs)
