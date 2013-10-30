@@ -21,7 +21,7 @@ import time
 MAIN_URL = 'http://www.funda.nl/koop/amsterdam'
 VERKOCHT_URL = 'http://www.funda.nl/koop/verkocht/amsterdam'
 
-DATA_DIR = "/Volumes/Users/markns/Google Drive/Data2/"
+DATA_DIR = "/Volumes/Users/markns/Google Drive/Data/"
 
 test_dir = "/Users/marknuttallsmith/Projects/FundaScraper/data2/"
 
