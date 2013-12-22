@@ -25,7 +25,9 @@ for csv in files:
     stk_list = ['West', 'Zuid']
 
     print df[df['Stadsdeel'].isin(stk_list)].loc[:, ['Vraagprijs']].mean()
-    print df.loc[:, ['Vraagprijs']].mean()
+    # print df.loc[:, ['Vraagprijs']].head()
+    # print df.loc[:, ['Vraagprijs']].std()
+    # print df.loc[:, ['Vraagprijs']].mean()
 
 
 
