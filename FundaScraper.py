@@ -2,21 +2,20 @@
 import csv
 from datetime import date
 import httplib
-import os
 import re
 import sys
 import logging
 from urllib2 import URLError
-import urllib2
-import mechanize
 import urlparse
-import requests
-
 from datetime import datetime
+import time
+
+import mechanize
+import requests
+from bs4 import BeautifulSoup
 
 import Stadsdeel
-from bs4 import BeautifulSoup
-import time
+
 
 MAIN_URL = 'http://www.funda.nl/koop/amsterdam'
 VERKOCHT_URL = 'http://www.funda.nl/koop/verkocht/amsterdam'
